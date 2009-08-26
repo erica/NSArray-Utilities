@@ -14,7 +14,8 @@
 		8E0EF27D0FA40F3B002160B9 /* ArrayUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E0EF2780FA40F3B002160B9 /* ArrayUtilities.m */; };
 		8E4156E90FA4EE0E0006D27C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E4156E70FA4EE0E0006D27C /* Default.png */; };
 		8E4156EA0FA4EE0E0006D27C /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E4156E80FA4EE0E0006D27C /* icon.png */; };
-		8E7856C80FCB09B6006EA81F /* NSObject-Value.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E7856C70FCB09B6006EA81F /* NSObject-Value.m */; };
+		8EEC46181045C4BD0019B708 /* NSObject-Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EEC46171045C4BD0019B708 /* NSObject-Utility.m */; };
+		8EEC46BA1045C9660019B708 /* TestBedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8EEC46B91045C9660019B708 /* TestBedViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,8 +30,9 @@
 		8E0EF2780FA40F3B002160B9 /* ArrayUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArrayUtilities.m; sourceTree = "<group>"; };
 		8E4156E70FA4EE0E0006D27C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		8E4156E80FA4EE0E0006D27C /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
-		8E7856C60FCB09B6006EA81F /* NSObject-Value.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject-Value.h"; path = "../NSObject-Utilities/NSObject-Value.h"; sourceTree = SOURCE_ROOT; };
-		8E7856C70FCB09B6006EA81F /* NSObject-Value.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject-Value.m"; path = "../NSObject-Utilities/NSObject-Value.m"; sourceTree = SOURCE_ROOT; };
+		8EEC46161045C4BD0019B708 /* NSObject-Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject-Utility.h"; path = "../NSObject-Utilities/NSObject-Utility.h"; sourceTree = SOURCE_ROOT; };
+		8EEC46171045C4BD0019B708 /* NSObject-Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject-Utility.m"; path = "../NSObject-Utilities/NSObject-Utility.m"; sourceTree = SOURCE_ROOT; };
+		8EEC46B91045C9660019B708 /* TestBedViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestBedViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,8 +77,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				8E7856C60FCB09B6006EA81F /* NSObject-Value.h */,
-				8E7856C70FCB09B6006EA81F /* NSObject-Value.m */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				8E0EF2770FA40F3B002160B9 /* ArrayUtilities.h */,
 				8E0EF2780FA40F3B002160B9 /* ArrayUtilities.m */,
@@ -99,6 +99,9 @@
 		8E4235620FACA33900CB1256 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8EEC46B91045C9660019B708 /* TestBedViewController.xib */,
+				8EEC46161045C4BD0019B708 /* NSObject-Utility.h */,
+				8EEC46171045C4BD0019B708 /* NSObject-Utility.m */,
 				8E4156E80FA4EE0E0006D27C /* icon.png */,
 				8E4156E70FA4EE0E0006D27C /* Default.png */,
 				32CA4F630368D1EE00C91783 /* HelloWorld_Prefix.pch */,
@@ -151,6 +154,7 @@
 			files = (
 				8E4156E90FA4EE0E0006D27C /* Default.png in Resources */,
 				8E4156EA0FA4EE0E0006D27C /* icon.png in Resources */,
+				8EEC46BA1045C9660019B708 /* TestBedViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,7 +167,7 @@
 			files = (
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				8E0EF27D0FA40F3B002160B9 /* ArrayUtilities.m in Sources */,
-				8E7856C80FCB09B6006EA81F /* NSObject-Value.m in Sources */,
+				8EEC46181045C4BD0019B708 /* NSObject-Utility.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

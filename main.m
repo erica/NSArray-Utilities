@@ -1,83 +1,104 @@
-/*
- Erica Sadun, http://ericasadun.com
- iPhone Developer's Cookbook, 3.0 Edition
- BSD License, Use at your own risk
- */
-
 #import <UIKit/UIKit.h>
-#import "UIDevice-Reachability.h"
-#import "UIDevice-IOKitExtensions.h"
-#import "UIDevice-Hardware.h"
-#define COOKBOOK_PURPLE_COLOR	[UIColor colorWithRed:0.20392f green:0.19607f blue:0.61176f alpha:1.0f]
-#define BARBUTTON(TITLE, SELECTOR) 	[[[UIBarButtonItem alloc] initWithTitle:TITLE style:UIBarButtonItemStylePlain target:self action:SELECTOR] autorelease]
-#define CFN(X) [self commasForNumber:X]
+#import "ArrayUtilities.h"
+#import "NSObject-Utility.h"
 
-@interface TestBedViewController : UIViewController
+// Boolean test for collect and reject
+@interface NSString (tests)
+@end
+@implementation NSString (tests)
+- (BOOL) isShort
 {
-	NSMutableString *log;
-	IBOutlet UITextView *textView;
+	return (self.length < 5);
 }
-@property (retain) NSMutableString *log;
-@property (retain) UITextView *textView;
 @end
 
-@implementation TestBedViewController
-@synthesize log;
-@synthesize textView;
+@interface TestBedController : UIViewController
+@end
 
-- (void) doLog: (NSString *) formatstring, ...
+@implementation TestBedController
+- (void) performAction
 {
-	va_list arglist;
-	if (!formatstring) return;
-	va_start(arglist, formatstring);
-	NSString *outstring = [[[NSString alloc] initWithFormat:formatstring arguments:arglist] autorelease];
-	va_end(arglist);
-	[self.log appendString:outstring];
-	[self.log appendString:@"\n"];
-	self.textView.text = self.log;
-}
-
-- (NSString *) commasForNumber: (long long) num
-{
-	if (num < 1000) return [NSString stringWithFormat:@"%d", num];
-	return	[[self commasForNumber:num/1000] stringByAppendingFormat:@",%03d", (num % 1000)];
-}
-
-- (void) action: (UIBarButtonItem *) bbi
-{
-	self.log = [NSMutableString string];
-	
-	// TESTING REACHABILITY
 	/*
-	[self doLog:@"Host Name: %@", [UIDevice hostname]];
-	[self doLog:@"Local IP Addy: %@", [UIDevice localIPAddress]];
-	[self doLog:@"  Google IP Addy: %@", [UIDevice getIPAddressForHost:@"www.google.com"]];
-	[self doLog:@"  Amazon IP Addy: %@", [UIDevice getIPAddressForHost:@"www.amazon.com"]];
-	[self doLog:@"Local WiFI Addy: %@", [UIDevice localWiFiIPAddress]];
-	if ([UIDevice networkAvailable])
-		[self doLog:@"What is My IP: %@", [UIDevice whatismyipdotcom]];
+	 NSARRAY UTILITIES
 	 */
+
+	// Simple data to play with
+	NSArray *array1 = [NSArray arrayWithObjects:@"a", @"b", @"a", @"f", @"b", @"c", [NSNumber numberWithInt:23], @"a", nil];
+	NSArray *array2 = [NSArray arrayWithObjects:@"efgh", @"foo bar blort", @"afganicklebeesper", @"a", @"f", nil];
 	
-	// TESTING IOKIT
+	// First object
+	printf("First object of array:\n");
+	CFShow([array1 firstObject]);
+	
+	// Unique members, Union, Intersection
+	printf("\nUnique members, union, intersection:\n");
+	CFShow([array1 uniqueMembers].stringValue);
+	CFShow([array1 unionWithArray:array2].stringValue);
+	CFShow([array1 intersectionWithArray:array2].stringValue);
+	
+	// Sorting
+	printf("\nString sorting:\n");
+	CFShow(array1.sortedStrings.stringValue);
+	CFShow([array2 arrayBySortingStrings].stringValue);
+	
+	// Map, collect, reject
+	// Note that results must be of type NSObject. Mapping "length" for instance crashes, returning int
+	// NSNull is inserted when values return nil.
+	printf("\nMapping and collecting\n");
+	CFShow([array1 map:@selector(stringByAppendingString:) withObject:@"foo"].stringValue);
+	CFShow([array2 map:@selector(stringByAppendingString:) withObject:@"foo"].stringValue);
+	CFShow([array2 map:@selector(length)].stringValue);
+	CFShow([array2 collect:@selector(isShort)].stringValue);
+	CFShow([array2 reject:@selector(isShort)].stringValue);
+
 	/*
-	[self doLog:[UIDevice imei]];
-	[self doLog:[UIDevice serialnumber]];
+	 MUTABLE ARRAY UTILITIES
 	 */
+
+	// Simple data to play with
+	NSString *alpha = @"a b c d e f g h i j k l m n o p q r s t u v w x y z";
+	NSMutableArray *array = [NSMutableArray arrayWithArray:[alpha componentsSeparatedByString:@" "]];
+
+	// Reverse array
+	printf("\nReversed:\n");
+	CFShow(array.stringValue);
+	CFShow(array.reversed.stringValue);
 	
-	// TESTING DEVICE HARDWARE
-	[self doLog:@"Device is%@ portrait", [UIDevice currentDevice].isPortrait ? @"" : @" not"];
-	[self doLog:@"Orientation: %@", [UIDevice currentDevice].orientationString];
-	[self doLog:@"Platform: %@", [UIDevice platform]];
-	[self doLog:@"Platform String: %@", [UIDevice platformString]];
-	[self doLog:@"Platform Code: %@", [UIDevice platformCode]];
-	[self doLog:@"CPU Freq: %d\nBus Freq: %@\nTotal Memory: %@\nUser Memory: %@", CFN([UIDevice cpuFrequency]), CFN([UIDevice busFrequency]), CFN([UIDevice totalMemory]), CFN([UIDevice userMemory])];
-	[self doLog:@"Mac addy: %@", [UIDevice macaddress]];
+	// Scramble members
+	printf("\nScrambling & Shuffling\n");
+	CFShow([array scramble].stringValue);
+	array = [NSMutableArray arrayWithArray:[alpha componentsSeparatedByString:@" "]];
+	
+	// Remove First object
+	printf("\nRemove First Object\n");
+	CFShow([array removeFirstObject].stringValue);
+	
+	// push/pop/pull
+	printf("\nPush, Pop, Pull\n");
+	CFShow([[array pushObject:@"1"] pushObject:@"2"].stringValue);
+	CFShow([array popObject]);
+	CFShow([array pullObject]);
+	CFShow(array.stringValue);
+	
+	NSMutableArray *small = [[@"a b c" componentsSeparatedByString:@" "] mutableCopy];
+	CFShow(small.stringValue);
+	for (int i = 0; i < 5; i++) CFShow([small pullObject]);
+	small = [[@"a b c" componentsSeparatedByString:@" "] mutableCopy];
+	CFShow(small.stringValue);
+	for (int i = 0; i < 5; i++) CFShow([small popObject]);
 }
 
-- (void) viewDidLoad
+- (void) loadView
 {
-	self.navigationController.navigationBar.tintColor = COOKBOOK_PURPLE_COLOR;
-	self.navigationItem.rightBarButtonItem = BARBUTTON(@"Action", @selector(action:));
+	UIView *contentView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+	self.view = contentView;
+	contentView.backgroundColor = [UIColor whiteColor];
+    [contentView release];
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
+											   initWithTitle:@"Action" 
+											   style:UIBarButtonItemStylePlain 
+											   target:self 
+											   action:@selector(performAction)] autorelease];
 }
 @end
 
@@ -85,9 +106,9 @@
 @end
 
 @implementation TestBedAppDelegate
-- (void)applicationDidFinishLaunching:(UIApplication *)application {	
+- (void)applicationDidFinishLaunching:(UIApplication *)application {
 	UIWindow *window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-	UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[[TestBedViewController alloc] init]];
+	UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:[[TestBedController alloc] init]];
 	[window addSubview:nav.view];
 	[window makeKeyAndVisible];
 }
