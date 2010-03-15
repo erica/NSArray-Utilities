@@ -1,6 +1,6 @@
 #import <UIKit/UIKit.h>
 #import "ArrayUtilities.h"
-#import "NSObject-Utility.h"
+#import "NSObject-Utilities.h"
 
 // Boolean test for collect and reject
 @interface NSString (tests)

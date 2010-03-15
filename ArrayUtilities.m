@@ -5,7 +5,7 @@
  */
 
 #import "ArrayUtilities.h"
-#import "NSObject-Utility.h"
+#import "NSObject-Utilities.h"
 #import <time.h>
 #import <stdarg.h>
 

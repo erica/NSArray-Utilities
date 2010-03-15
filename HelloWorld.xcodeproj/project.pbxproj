@@ -14,7 +14,7 @@
 		8E0EF27D0FA40F3B002160B9 /* ArrayUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E0EF2780FA40F3B002160B9 /* ArrayUtilities.m */; };
 		8E4156E90FA4EE0E0006D27C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E4156E70FA4EE0E0006D27C /* Default.png */; };
 		8E4156EA0FA4EE0E0006D27C /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E4156E80FA4EE0E0006D27C /* icon.png */; };
-		8EEC46181045C4BD0019B708 /* NSObject-Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EEC46171045C4BD0019B708 /* NSObject-Utility.m */; };
+		8E43B99C114EB7A80079785E /* NSObject-Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E43B99B114EB7A80079785E /* NSObject-Utilities.m */; };
 		8EEC46BA1045C9660019B708 /* TestBedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8EEC46B91045C9660019B708 /* TestBedViewController.xib */; };
 /* End PBXBuildFile section */
 
@@ -30,8 +30,8 @@
 		8E0EF2780FA40F3B002160B9 /* ArrayUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArrayUtilities.m; sourceTree = "<group>"; };
 		8E4156E70FA4EE0E0006D27C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		8E4156E80FA4EE0E0006D27C /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
-		8EEC46161045C4BD0019B708 /* NSObject-Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject-Utility.h"; path = "../NSObject-Utilities/NSObject-Utility.h"; sourceTree = SOURCE_ROOT; };
-		8EEC46171045C4BD0019B708 /* NSObject-Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject-Utility.m"; path = "../NSObject-Utilities/NSObject-Utility.m"; sourceTree = SOURCE_ROOT; };
+		8E43B99A114EB7A80079785E /* NSObject-Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject-Utilities.h"; path = "../NSObject-Utilities/NSObject-Utilities.h"; sourceTree = SOURCE_ROOT; };
+		8E43B99B114EB7A80079785E /* NSObject-Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject-Utilities.m"; path = "../NSObject-Utilities/NSObject-Utilities.m"; sourceTree = SOURCE_ROOT; };
 		8EEC46B91045C9660019B708 /* TestBedViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestBedViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -80,6 +80,8 @@
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				8E0EF2770FA40F3B002160B9 /* ArrayUtilities.h */,
 				8E0EF2780FA40F3B002160B9 /* ArrayUtilities.m */,
+				8E43B99A114EB7A80079785E /* NSObject-Utilities.h */,
+				8E43B99B114EB7A80079785E /* NSObject-Utilities.m */,
 				8E4235620FACA33900CB1256 /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
@@ -100,8 +102,6 @@
 			isa = PBXGroup;
 			children = (
 				8EEC46B91045C9660019B708 /* TestBedViewController.xib */,
-				8EEC46161045C4BD0019B708 /* NSObject-Utility.h */,
-				8EEC46171045C4BD0019B708 /* NSObject-Utility.m */,
 				8E4156E80FA4EE0E0006D27C /* icon.png */,
 				8E4156E70FA4EE0E0006D27C /* Default.png */,
 				32CA4F630368D1EE00C91783 /* HelloWorld_Prefix.pch */,
@@ -167,7 +167,7 @@
 			files = (
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				8E0EF27D0FA40F3B002160B9 /* ArrayUtilities.m in Sources */,
-				8EEC46181045C4BD0019B708 /* NSObject-Utility.m in Sources */,
+				8E43B99C114EB7A80079785E /* NSObject-Utilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
