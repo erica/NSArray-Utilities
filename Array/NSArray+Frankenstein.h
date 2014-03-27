@@ -11,45 +11,42 @@ typedef BOOL (^TestingBlock)(id object);
 
 #pragma mark - Utility
 @interface NSArray (Frankenstein)
-- (id) safeObjectAtIndex: (NSUInteger) index;
 
-@property (nonatomic, readonly) NSString *stringValue;
+// Transform array to va_list
+@property (nonatomic, readonly) va_list va_list;
+
+// Random
+@property (nonatomic, readonly) id randomItem;
+@property (nonatomic, readonly) NSArray *scrambled;
+
+// Utility
 @property (nonatomic, readonly) NSArray *reversed;
 @property (nonatomic, readonly) NSArray *sorted;
 @property (nonatomic, readonly) NSArray *sortedCaseInsensitive;
-@property (nonatomic, readonly) NSArray *uniqueElements;
-@property (nonatomic, readonly) NSArray *scrambled;
 
 // Setification
+@property (nonatomic, readonly) NSArray *uniqueElements;
 - (NSArray *) unionWithArray: (NSArray *) anArray;
 - (NSArray *) intersectionWithArray: (NSArray *) anArray;
 - (NSArray *) differenceToArray: (NSArray *) anArray;
 
 // Lisp
+@property (nonatomic, readonly) id car;
+@property (nonatomic, readonly) NSArray *cdr;
 - (NSArray *) map: (MapBlock) aBlock;
 - (NSArray *) collect: (TestingBlock) aBlock;
 - (NSArray *) reject: (TestingBlock) aBlock;
-
-#if TARGET_OS_IPHONE
-// Index 2-D array by IndexPath
-- (id) objectForKeyedSubscript: (id) subscript;
-#endif
 @end
 
 #pragma mark - Utility
 @interface NSMutableArray (Frankenstein)
-- (NSMutableArray *) reverse;
-- (void) safeSetObject: (id) object atIndex: (NSUInteger) index;
+- (NSMutableArray *) reverseSelf;
 @end
 
 #pragma mark - Stacks and Queues
 @interface NSMutableArray (StackAndQueueExtensions)
-- (id) pop;
 - (id) popObject;
-- (id) pull;
 - (id) pullObject;
-
-- (NSMutableArray *) push:(id)object;
 - (NSMutableArray *) pushObject:(id)object;
 - (NSMutableArray *) pushObjects:(id)object,...;
 @end
@@ -67,6 +64,9 @@ typedef BOOL (^TestingBlock)(id object);
 #pragma mark - Safe Access Override
 @interface NSArray (safeArray)
 - (id)objectAtIndexedSubscript:(NSUInteger)idx;
+#if TARGET_OS_IPHONE
+- (id) objectForKeyedSubscript: (id) subscript; // for IndexPath - iOS Only
+#endif
 @end
 
 @interface NSMutableArray (safeArray)

@@ -6,16 +6,14 @@
 
 #import "NSArray+Frankenstein.h"
 
+#pragma mark - NSArray Utility -
+
 @implementation NSArray (Frankenstein)
+
+#pragma mark - Custom description
 
 - (NSString *) descriptionWithLocale:(id)locale
 {
-//    if ([NSJSONSerialization isValidJSONObject:self])
-//    {
-//        NSData *d = [NSJSONSerialization dataWithJSONObject:self options:NSJSONWritingPrettyPrinted error:nil];
-//        return [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
-//    }
-    
     NSMutableString *description = [NSMutableString string];
     NSArray *descriptionArray = [self map:^id(id object) {if ([object respondsToSelector:@selector(descriptionWithLocale:)]) return [object descriptionWithLocale:locale]; return [object description];}];
 
@@ -26,12 +24,41 @@
     return description;
 }
 
-# pragma mark - handy properties
+# pragma mark - va_list
 
-- (NSString *) stringValue
+- (va_list) va_list
 {
-	return [NSString stringWithFormat:@"[%@]", [self componentsJoinedByString:@", "]];
+    NSMutableData *data = [NSMutableData dataWithLength:(sizeof(id) * self.count)];
+    [self getObjects: (__unsafe_unretained id *)data.mutableBytes range:NSMakeRange(0, self.count)];
+    return data.mutableBytes;
 }
+
+
+#pragma mark - Random
+
+- (id) randomItem
+{
+    if (!self.count) return nil;
+    
+    static BOOL seeded = NO;
+    if (!seeded) {seeded = YES; srandom((unsigned int) time(0));}
+
+    int whichItem = (NSUInteger)(random() % self.count);
+    return self[whichItem];
+}
+
+- (NSArray *) scrambled
+{
+    static BOOL seeded = NO;
+    if (!seeded) {seeded = YES; srandom((unsigned int) time(0));}
+    
+    NSMutableArray *resultArray = [self mutableCopy];
+	for (int i = 0; i < (self.count - 2); i++)
+		[resultArray exchangeObjectAtIndex:i withObjectAtIndex:(i + (random() % (self.count - i)))];
+	return resultArray.copy;
+}
+
+#pragma mark - Utility
 
 - (NSArray *) reversed
 {
@@ -53,29 +80,21 @@
 }
 
 
+#pragma mark - Set theory
+
 - (NSArray *) uniqueElements
 {
     return [NSOrderedSet orderedSetWithArray:self].array.copy;
 }
 
-- (NSArray *) scrambled
-{
-    static BOOL seeded = NO;
-    if (!seeded) {seeded = YES; srandom((unsigned int) time(0));}
-    
-    NSMutableArray *resultArray = self.mutableCopy;
-	for (int i = 0; i < (self.count - 2); i++)
-		[resultArray exchangeObjectAtIndex:i withObjectAtIndex:(i + (random() % (self.count - i)))];
-	return resultArray;
-}
-
-#pragma mark - Set theory
-
 - (NSArray *) unionWithArray: (NSArray *) anArray
 {
-    NSMutableOrderedSet *set = [NSMutableOrderedSet orderedSetWithArray:self];
-    [set addObjectsFromArray:anArray];
-    return set.array.copy;
+    NSMutableOrderedSet *set1 = [NSMutableOrderedSet orderedSetWithArray:self];
+    NSMutableOrderedSet *set2 = [NSMutableOrderedSet orderedSetWithArray:anArray];
+    
+    [set1 unionOrderedSet:set2];
+    
+    return set1.array.copy;
 }
 
 - (NSArray *) intersectionWithArray: (NSArray *) anArray
@@ -90,26 +109,45 @@
 
 - (NSArray *) differenceToArray: (NSArray *) anArray
 {
-    NSMutableArray *mutable = self.mutableCopy;
-    [mutable removeObjectsInArray:anArray];
-    return [mutable copy];
+    NSMutableOrderedSet *set1 = [NSMutableOrderedSet orderedSetWithArray:self];
+    NSMutableOrderedSet *set2 = [NSMutableOrderedSet orderedSetWithArray:anArray];
+    
+    [set1 minusOrderedSet:set2];
+
+    return set1.array.copy;
 }
 
 #pragma mark - Lisp
 
+- (id) car
+{
+    if (self.count == 0) return nil;
+    return self[0];
+}
+
+- (NSArray *) cdr
+{
+    if (self.count < 2) return nil;
+    return [self subarrayWithRange:NSMakeRange(1, self.count - 1)];
+}
+
 - (NSArray *) map: (MapBlock) aBlock
 {
+    if (!aBlock) return self;
+    
     NSMutableArray *resultArray = [NSMutableArray array];
     for (id object in self)
     {
         id result = aBlock(object);
         [resultArray addObject: result ? : [NSNull null]];
     }
-    return resultArray;
+    return [resultArray copy];
 }
 
 - (NSArray *) collect: (TestingBlock) aBlock
 {
+    if (!aBlock) return self;
+    
     NSMutableArray *resultArray = [NSMutableArray array];
     for (id object in self)
     {
@@ -117,11 +155,13 @@
         if (result)
             [resultArray addObject:object];
     }
-    return resultArray;
+    return [resultArray copy];
 }
 
 - (NSArray *) reject: (TestingBlock) aBlock
 {
+    if (!aBlock) return self;
+    
     NSMutableArray *resultArray = [NSMutableArray array];
     for (id object in self)
     {
@@ -129,69 +169,25 @@
         if (!result)
             [resultArray addObject:object];
     }
-    return resultArray;
+    return [resultArray copy];
 }
-
-#pragma mark - Utility
-
-- (id) safeObjectAtIndex: (NSUInteger) index
-{
-    if (index < self.count)
-    {
-        id object = [self objectAtIndex:index];
-        if ([object isKindOfClass:[NSNull class]])
-            return nil;
-        return object;
-    }
-    return nil;
-}
-
-#pragma mark -
-
-#if TARGET_OS_IPHONE
-- (id) objectForKeyedSubscript: (id) subscript
-{
-    if (![subscript isKindOfClass:[NSIndexPath class]])
-        return nil;
-    NSIndexPath *path = (NSIndexPath *) subscript;
-    NSArray *sub = [self safeObjectAtIndex:path.section];
-    if (![sub isKindOfClass:[NSArray class]])
-        return nil;
-    return [sub safeObjectAtIndex:path.row];
-}
-#endif
 @end
 
+
+#pragma mark - NSMutableArray Utility -
+
 @implementation NSMutableArray (Frankenstein)
-- (NSMutableArray *) reverse
+
+- (NSMutableArray *) reverseSelf
 {
 	for (int i = 0; i < (floor(self.count/2.0)); i++) 
 		[self exchangeObjectAtIndex:i withObjectAtIndex:(self.count-(i+1))];
 	return self;
 }
 
-- (void) safeSetObject: (id) object atIndex: (NSUInteger) index
-{
-    if (index < self.count)
-    {
-        if (object)
-        {
-            self[index] = object;
-            return;
-        }
-        
-        // Insert nil as a null object
-        self[index] = [NSNull null];
-        return;
-    }
-    
-    // out of bounds
-    for (NSInteger i = self.count; i < index; i++)
-        [self addObject:[NSNull null]];
-    
-    [self addObject:object];
-}
 @end
+
+#pragma mark - Stack and Queue -
 
 // Pull from start, pop from end, push onto end
 @implementation NSMutableArray (StackAndQueueExtensions)
@@ -205,20 +201,10 @@
     return lastObject;
 }
 
-- (id) pop
-{
-	return [self popObject];
-}
-
 - (NSMutableArray *) pushObject:(id)object
 {
     [self addObject:object];
 	return self;
-}
-
-- (NSMutableArray *) push:(id)object
-{
-	return [self pushObject:object];
 }
 
 - (NSMutableArray *) pushObjects:(id)object,...
@@ -244,14 +230,12 @@
 	[self removeObjectAtIndex:0];
 	return object;
 }
-
-- (id) pull
-{
-	return [self pullObject];
-}
 @end
 
-#pragma mark NSArray and NSMutableArray Pseudo Dictionary
+#pragma mark - NSArray and NSMutableArray Pseudo Dictionary -
+
+// Primarily used for key path for property list utilities
+
 @implementation NSArray (pseudodictionary)
 - (id) objectForKey: (NSString *) aKey
 {
@@ -274,8 +258,36 @@
 }
 @end
 
-#pragma mark - Safe Array
+#pragma mark - Safe Arrays -
+
 @implementation NSArray (safeArray)
+
+// Consider using Sparse Array instead
+- (id) safeObjectAtIndex: (NSUInteger) index
+{
+    if (index < self.count)
+    {
+        id object = [self objectAtIndex:index];
+        if ([object isKindOfClass:[NSNull class]])
+            return nil;
+        return object;
+    }
+    return nil;
+}
+
+#if TARGET_OS_IPHONE
+- (id) objectForKeyedSubscript: (id) subscript
+{
+    if (![subscript isKindOfClass:[NSIndexPath class]])
+        return nil;
+    NSIndexPath *path = (NSIndexPath *) subscript;
+    NSArray *sub = [self safeObjectAtIndex:path.section];
+    if (![sub isKindOfClass:[NSArray class]])
+        return nil;
+    return [sub safeObjectAtIndex:path.row];
+}
+#endif
+
 - (id)objectAtIndexedSubscript:(NSUInteger)idx
 {
     return [self safeObjectAtIndex:idx];
@@ -283,6 +295,30 @@
 @end
 
 @implementation NSMutableArray (safeArray)
+
+// Consider using Sparse Array instead
+- (void) safeSetObject: (id) object atIndex: (NSUInteger) index
+{
+    if (index < self.count)
+    {
+        if (object)
+        {
+            self[index] = object;
+            return;
+        }
+        
+        // Insert nil as a null object
+        self[index] = [NSNull null];
+        return;
+    }
+    
+    // out of bounds
+    for (NSInteger i = self.count; i < index; i++)
+        [self addObject:[NSNull null]];
+    
+    [self addObject:object];
+}
+
 - (void)setObject:(id)anObject atIndexedSubscript:(NSUInteger)index
 {
     [self safeSetObject:anObject atIndex:index];
